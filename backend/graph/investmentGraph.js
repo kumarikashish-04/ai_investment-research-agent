@@ -8,15 +8,22 @@ const { debateAgent } = require("../agents/debateAgent");
 const { committeeAgent } = require("../agents/committeeAgent");
 
 const graph = new StateGraph({
-  channels: {
-    company: null,
-    research: null,
-    financial: null,
-    sentiment: null,
-    risks: null,
-    debate: null,
-    verdict: null,
-  },
+    channels: {
+        company: null,
+      
+        research: null,
+      
+        financialData: null,
+        financialAnalysis: null,
+      
+        news: null,
+        sentiment: null,
+      
+        risks: null,
+        debate: null,
+      
+        verdict: null,
+      }
 });
 
 graph.addNode("researchNode", researchAgent);

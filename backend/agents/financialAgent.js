@@ -1,24 +1,52 @@
 const { model } = require("../services/llm");
+const { getCompanyData } = require("../services/yahooFinance");
 
 async function financialAgent(state) {
-  const prompt = `
-    Analyze financial strength of ${state.company}
+    const prompt = `
+Analyze ${state.company}.
 
-    Give:
-    - Revenue Growth
-    - Profitability
-    - Debt
-    - Cash Flow
+Return ONLY valid JSON.
 
-    Keep concise.
-  `;
+Format:
 
-  const result = await model.invoke(prompt);
+{
+  "financialStrength": {
+    "cashPosition": "",
+    "debtLevel": "",
+    "profitability": ""
+  },
+  "growthPotential": {
+    "revenueGrowth": "",
+    "earningsGrowth": ""
+  },
+  "valuationAssessment": {
+    "peRatio": "",
+    "marketCap": "",
+    "verdict": ""
+  }
+}
 
-  return {
-    ...state,
-    financial: result.content,
+Do not use markdown.
+Do not use \`\`\`json.
+Return JSON only.
+`;
+  
+const result = await model.invoke(prompt);
+
+let financialAnalysis;
+
+try {
+  financialAnalysis = JSON.parse(result.content);
+} catch (error) {
+  financialAnalysis = {
+    error: "Failed to parse financial analysis"
   };
 }
+  
+    return {
+      ...state,
+      financialAnalysis
+    };
+  }
 
 module.exports = { financialAgent };
