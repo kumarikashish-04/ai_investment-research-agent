@@ -1,74 +1,46 @@
 import { useState } from "react";
 
-import SearchBar from "../components/SearchBar";
+import Navbar from "../components/layout/Navbar";
+import Footer from "../components/layout/Footer";
 
-import OverviewCard from "../components/OverviewCard";
+import SearchBar from "../components/common/SearchBar";
 
-import FinancialCard from "../components/FinancialCard";
+function Dashboard(){
 
-import SentimentCard from "../components/SentimentCard";
+    const [company,setCompany]=useState("");
 
-import DebatePanel from "../components/DebatePanel";
+    const handleAnalyze=()=>{
 
-import VerdictCard from "../components/VerdictCard";
+        console.log(company);
 
-import LoadingScreen from "../components/LoadingScreen";
-
-import api from "../services/api";
-
-function Dashboard() {
-  const [company, setCompany] = useState("");
-
-  const [data, setData] = useState(null);
-
-  const [loading, setLoading] = useState(false);
-
-  const handleAnalyze = async () => {
-    setLoading(true);
-
-    try {
-      const response = await api.post("/analyze", {
-        company,
-      });
-
-      setData(response.data);
-    } catch (err) {
-      console.log(err);
     }
 
-    setLoading(false);
-  };
+    return(
 
-  return (
-    <div className="min-h-screen bg-zinc-950 text-white p-8">
+        <div className="min-h-screen bg-zinc-950">
 
-      <h1 className="text-4xl font-bold mb-8">
-        AI Investment Terminal
-      </h1>
+            <Navbar/>
 
-      <SearchBar
-        company={company}
-        setCompany={setCompany}
-        handleAnalyze={handleAnalyze}
-      />
+            <div className="max-w-7xl mx-auto px-8">
 
-      {loading && <LoadingScreen />}
+                <SearchBar
 
-      {data && (
-        <>
-          <OverviewCard data={data} />
+                company={company}
 
-          <FinancialCard data={data} />
+                setCompany={setCompany}
 
-          <SentimentCard data={data} />
+                handleAnalyze={handleAnalyze}
 
-          <DebatePanel data={data} />
+                />
 
-          <VerdictCard data={data} />
-        </>
-      )}
-    </div>
-  );
+            </div>
+
+            <Footer/>
+
+        </div>
+
+    )
+
 }
 
 export default Dashboard;

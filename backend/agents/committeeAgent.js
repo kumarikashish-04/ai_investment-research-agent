@@ -30,9 +30,22 @@ async function committeeAgent(state) {
 
   const result = await model.invoke(prompt);
 
+  let verdictData;
+
+try{
+  verdictData = JSON.parse(result.content);
+}catch(err){
+  verdictData = {
+    verdict:"UNKNOWN",
+    confidence:0,
+    reason:"Parsing failed"
+  };
+}
   return {
     ...state,
-    verdict: result.content,
+    verdict: verdictData.verdict,
+    confidence: verdictData.confidence,
+    reason: verdictData.reason
   };
 }
 
