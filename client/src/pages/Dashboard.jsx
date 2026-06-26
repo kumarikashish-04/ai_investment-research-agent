@@ -1,4 +1,5 @@
 import { useState } from "react";
+import CompanySnapshot from "../components/dashboard/CompanySnapshot";
 import api from "../services/api";
 import Navbar from "../components/layout/Navbar";
 import Footer from "../components/layout/Footer";
@@ -12,20 +13,32 @@ function Dashboard(){
     const [data, setData] = useState(null);
 
     const handleAnalyze = async () => {
-        try {
-            setLoading(true);
-    
-            const response = await api.post("/analyze", {
-                company,
-            });
-    
-            setData(response.data);
-        } catch (error) {
-            console.error(error);
-        } finally {
-            setLoading(false);
-        }
-    };
+
+      try{
+  
+          setLoading(true);
+  
+          const response = await api.post("/analyze",{
+              company
+          });
+  
+          setData(response.data);
+  
+      }
+  
+      catch(error){
+  
+          console.log(error);
+  
+      }
+  
+      finally{
+  
+          setLoading(false);
+  
+      }
+  
+  }
     const [loading,setLoading]=useState(false);
 
     return (
@@ -43,11 +56,15 @@ function Dashboard(){
   
               {loading && <LoadingOverlay />}
   
-              {data && (
-                  <CompanyOverview
-                      research={data.research}
-                  />
-              )}
+              {
+    data &&
+
+    <div className="mt-8">
+
+        <CompanySnapshot research={data.research}/>
+
+    </div>
+}
   
           </div>
   
