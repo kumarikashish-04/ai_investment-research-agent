@@ -2,18 +2,25 @@ import { useState } from "react";
 
 import Navbar from "../components/layout/Navbar";
 import Footer from "../components/layout/Footer";
-
+import LoadingOverlay from "../components/common/LoadingOverlay";
 import SearchBar from "../components/common/SearchBar";
 
 function Dashboard(){
 
     const [company,setCompany]=useState("");
 
-    const handleAnalyze=()=>{
+    const handleAnalyze=async()=>{
 
-        console.log(company);
-
-    }
+      setLoading(true);
+  
+      setTimeout(()=>{
+  
+          setLoading(false);
+  
+      },3000);
+  
+  }
+    const [loading,setLoading]=useState(false);
 
     return(
 
@@ -34,6 +41,11 @@ function Dashboard(){
                 />
 
             </div>
+            {
+    loading &&
+
+    <LoadingOverlay/>
+}
 
             <Footer/>
 
