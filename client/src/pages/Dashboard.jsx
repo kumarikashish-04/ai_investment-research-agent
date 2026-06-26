@@ -1,57 +1,60 @@
 import { useState } from "react";
-
+import api from "../services/api";
 import Navbar from "../components/layout/Navbar";
 import Footer from "../components/layout/Footer";
 import LoadingOverlay from "../components/common/LoadingOverlay";
 import SearchBar from "../components/common/SearchBar";
-
+import CompanyOverview from "../components/dashboard/CompanyOverview";
 function Dashboard(){
 
     const [company,setCompany]=useState("");
 
-    const handleAnalyze=async()=>{
+    const [data, setData] = useState(null);
 
-      setLoading(true);
-  
-      setTimeout(()=>{
-  
-          setLoading(false);
-  
-      },3000);
-  
-  }
+    const handleAnalyze = async () => {
+        try {
+            setLoading(true);
+    
+            const response = await api.post("/analyze", {
+                company,
+            });
+    
+            setData(response.data);
+        } catch (error) {
+            console.error(error);
+        } finally {
+            setLoading(false);
+        }
+    };
     const [loading,setLoading]=useState(false);
 
-    return(
-
-        <div className="min-h-screen bg-zinc-950">
-
-            <Navbar/>
-
-            <div className="max-w-7xl mx-auto px-8">
-
-                <SearchBar
-
-                company={company}
-
-                setCompany={setCompany}
-
-                handleAnalyze={handleAnalyze}
-
-                />
-
-            </div>
-            {
-    loading &&
-
-    <LoadingOverlay/>
-}
-
-            <Footer/>
-
-        </div>
-
-    )
+    return (
+      <div className="min-h-screen bg-zinc-950">
+  
+          <Navbar />
+  
+          <div className="max-w-7xl mx-auto px-8">
+  
+              <SearchBar
+                  company={company}
+                  setCompany={setCompany}
+                  handleAnalyze={handleAnalyze}
+              />
+  
+              {loading && <LoadingOverlay />}
+  
+              {data && (
+                  <CompanyOverview
+                      research={data.research}
+                  />
+              )}
+  
+          </div>
+  
+          <Footer />
+  
+      </div>
+  );
 
 }
 

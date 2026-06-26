@@ -2,27 +2,29 @@ import { FaChartLine } from "react-icons/fa";
 
 function Navbar() {
   return (
-    <nav className="w-full border-b border-zinc-800 bg-zinc-950">
+    <nav className="h-16 bg-zinc-950 border-b border-zinc-800 flex justify-between items-center px-8">
 
-      <div className="max-w-7xl mx-auto px-8 py-5 flex justify-between items-center">
+      <div className="flex items-center gap-3">
 
-        <div className="flex items-center gap-3">
+        <FaChartLine className="text-green-400 text-2xl" />
 
-          <FaChartLine className="text-green-400 text-3xl"/>
+        <div>
 
-          <div>
+          <h1 className="text-white font-bold text-xl">
+            AI Investment Terminal
+          </h1>
 
-            <h1 className="text-2xl font-bold text-white">
-              AI Investment Terminal
-            </h1>
-
-            <p className="text-sm text-zinc-500">
-              Multi-Agent Investment Research
-            </p>
-
-          </div>
+          <p className="text-zinc-500 text-sm">
+            Multi-Agent Investment Research
+          </p>
 
         </div>
+
+      </div>
+
+      <div className="text-green-400 text-sm">
+
+        ● Online
 
       </div>
 

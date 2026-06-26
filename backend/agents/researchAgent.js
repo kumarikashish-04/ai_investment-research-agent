@@ -1,24 +1,59 @@
 const { model } = require("../services/llm");
 
 async function researchAgent(state) {
-  const prompt = `
-    Research company ${state.company}
 
-    Give:
-    - What company does
-    - Industry
-    - Competitors
-    - Business model
+    const prompt = `
+You are an investment research analyst.
 
-    Keep concise.
-  `;
+Research the company "${state.company}".
 
-  const result = await model.invoke(prompt);
+Return ONLY valid JSON.
 
-  return {
-    ...state,
-    research: result.content,
-  };
+{
+    "company":"",
+    "ticker":"",
+    "industry":"",
+    "sector":"",
+    "headquarters":"",
+    "founded":"",
+    "ceo":"",
+    "businessModel":"",
+    "competitors":[]
 }
 
-module.exports = { researchAgent };
+Do not return markdown.
+
+Do not return explanation.
+
+Only JSON.
+`;
+
+    const result = await model.invoke(prompt);
+
+    let research;
+
+    try{
+
+        research=JSON.parse(result.content);
+
+    }
+
+    catch(error){
+
+        research={
+            error:"Unable to parse research"
+        }
+
+    }
+
+    return{
+
+        ...state,
+
+        research
+
+    }
+
+}
+
+module.exports={researchAgent};
