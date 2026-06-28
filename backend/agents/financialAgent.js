@@ -1,52 +1,105 @@
 const { model } = require("../services/llm");
-const { getCompanyData } = require("../services/yahooFinance");
 
-async function financialAgent(state) {
-    const prompt = `
-Analyze ${state.company}.
+const { getCompanyData } = require("../services/financialService");
 
-Return ONLY valid JSON.
+const { analyzeFinancials } = require("../services/financialAnalyzer");
 
-Format:
+async function financialAgent(state){
+
+    const rawData=await getCompanyData(state.company);
+
+    console.log(rawData);
+
+    const financial=analyzeFinancials(rawData);
+
+    const prompt=`
+
+You are a CFA Level III Investment Analyst.
+
+Analyze these financial metrics.
+
+${JSON.stringify(financial,null,2)}
+
+Return ONLY JSON.
 
 {
-  "financialStrength": {
-    "cashPosition": "",
-    "debtLevel": "",
-    "profitability": ""
-  },
-  "growthPotential": {
-    "revenueGrowth": "",
-    "earningsGrowth": ""
-  },
-  "valuationAssessment": {
-    "peRatio": "",
-    "marketCap": "",
-    "verdict": ""
-  }
+
+"summary":"",
+
+"strengths":[
+
+"",
+
+"",
+
+""
+
+],
+
+"weaknesses":[
+
+"",
+
+""
+
+],
+
+"investmentOpinion":"BUY/HOLD/SELL"
+
 }
 
-Do not use markdown.
-Do not use \`\`\`json.
-Return JSON only.
 `;
-  
-const result = await model.invoke(prompt);
 
-let financialAnalysis;
+    const result=await model.invoke(prompt);
 
-try {
-  financialAnalysis = JSON.parse(result.content);
-} catch (error) {
-  financialAnalysis = {
-    error: "Failed to parse financial analysis"
-  };
-}
-  
-    return {
-      ...state,
-      financialAnalysis
+    let ai;
+
+    try{
+
+        let text=result.content;
+
+        text=text.substring(
+
+            text.indexOf("{"),
+
+            text.lastIndexOf("}")+1
+
+        );
+
+        ai=JSON.parse(text);
+
+    }
+
+    catch{
+
+        ai={
+
+            summary:"AI parsing failed.",
+
+            strengths:[],
+
+            weaknesses:[],
+
+            investmentOpinion:"HOLD"
+
+        };
+
+    }
+
+    return{
+
+        ...state,
+
+        financial:{
+
+            ...financial,
+
+            ...ai
+
+        }
+
     };
-  }
 
-module.exports = { financialAgent };
+}
+
+module.exports={financialAgent};

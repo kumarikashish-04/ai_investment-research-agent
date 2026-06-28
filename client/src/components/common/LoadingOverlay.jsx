@@ -86,7 +86,7 @@ function LoadingOverlay() {
 
               agent.status==="waiting" &&
 
-              <FaRegCircle className="text-zinc-500"/>
+              <FaSpinner className="animate-spin text-yellow-400"/>
 
             }
 

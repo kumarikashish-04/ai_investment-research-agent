@@ -1,52 +1,80 @@
 const { model } = require("../services/llm");
 
 async function committeeAgent(state) {
-  const prompt = `
-    Based on:
 
-    Research:
-    ${state.research}
+    const prompt = `
 
-    Financial:
-    ${state.financial}
+You are the Chief Investment Officer.
 
-    Sentiment:
-    ${state.sentiment}
+Research:
 
-    Risks:
-    ${state.risks}
+${JSON.stringify(state.research)}
 
-    Debate:
-    ${state.debate}
+Financial:
 
-    Return:
+${JSON.stringify(state.financial)}
 
-    Verdict: INVEST or PASS
+Sentiment:
 
-    Confidence: %
+${JSON.stringify(state.sentiment)}
 
-    Reason:
-  `;
+Risk:
 
-  const result = await model.invoke(prompt);
+${JSON.stringify(state.risks)}
 
-  let verdictData;
+Bull Case:
 
-try{
-  verdictData = JSON.parse(result.content);
-}catch(err){
-  verdictData = {
-    verdict:"UNKNOWN",
-    confidence:0,
-    reason:"Parsing failed"
-  };
+${JSON.stringify(state.bull)}
+
+Bear Case:
+
+${JSON.stringify(state.bear)}
+
+Return ONLY JSON.
+
+{
+    "decision":"BUY",
+    "confidence":88,
+    "risk":"Medium",
+    "reason":"Short explanation",
+    "timeHorizon":"Long Term"
 }
-  return {
-    ...state,
-    verdict: verdictData.verdict,
-    confidence: verdictData.confidence,
-    reason: verdictData.reason
-  };
+
+`;
+
+    const result = await model.invoke(prompt);
+
+    let verdict;
+
+    try {
+
+        verdict = JSON.parse(
+            result.content
+                .replace(/```json/g, "")
+                .replace(/```/g, "")
+                .trim()
+        );
+
+    } catch {
+
+        verdict = {
+            decision: "HOLD",
+            confidence: 50,
+            risk: "Medium",
+            reason: "Unable to generate recommendation.",
+            timeHorizon: "Unknown"
+        };
+
+    }
+
+    return {
+
+        ...state,
+
+        verdict
+
+    };
+
 }
 
 module.exports = { committeeAgent };
