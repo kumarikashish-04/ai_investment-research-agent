@@ -6,7 +6,7 @@ import Footer from "../components/layout/Footer";
 import LoadingOverlay from "../components/common/LoadingOverlay";
 import SearchBar from "../components/common/SearchBar";
 // import CompanyOverview from "../components/dashboard/CompanyOverview";
-import FinancialHealth from "../components/dashboard/FinancialHealth";
+// import FinancialHealth from "../components/dashboard/FinancialHealth";
 import { useEffect } from "react";
 import FinancialOverview from "../components/dashboard/FinancialOverview";
 import FinancialScore from "../components/dashboard/FinancialScore";

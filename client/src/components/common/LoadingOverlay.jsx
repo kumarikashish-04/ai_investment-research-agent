@@ -2,7 +2,6 @@ import { motion } from "framer-motion";
 import {
   FaCheckCircle,
   FaSpinner,
-  FaRegCircle,
 } from "react-icons/fa";
 
 function LoadingOverlay() {

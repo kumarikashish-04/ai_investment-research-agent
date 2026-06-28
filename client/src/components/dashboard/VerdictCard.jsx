@@ -14,6 +14,19 @@ function VerdictCard({ verdict }) {
 
                 : "text-yellow-400";
 
+    const riskText = (() => {
+        if (verdict.risk == null) return "Unknown";
+        if (typeof verdict.risk === "object") {
+            if (Array.isArray(verdict.risk)) {
+                return verdict.risk.join(", ");
+            }
+            return Object.entries(verdict.risk)
+                .map(([key, value]) => `${key}: ${value}`)
+                .join("; ");
+        }
+        return verdict.risk;
+    })();
+
     return (
 
         <div className="mt-10 bg-zinc-900 rounded-2xl border border-zinc-800 p-8">
@@ -68,7 +81,7 @@ function VerdictCard({ verdict }) {
 
                     <h2 className="text-3xl font-bold">
 
-                        {verdict.risk}
+                        {riskText}
 
                     </h2>
 

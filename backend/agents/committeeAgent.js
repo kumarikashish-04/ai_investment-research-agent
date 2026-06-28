@@ -31,6 +31,7 @@ Bear Case:
 ${JSON.stringify(state.bear)}
 
 Return ONLY JSON.
+The "risk" field must be a simple string summarizing overall investment risk. Do not return a nested object or array for "risk".
 
 {
     "decision":"BUY",
